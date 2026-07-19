@@ -1,0 +1,83 @@
+# ============================================================
+# AUDIO CLUSTERING — KEDRO DATA CATALOG
+# ============================================================
+
+# ─── 01_raw ─────────────────────────────────────────────────
+audio_files_manifest:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/audio_manifest.csv
+  # Expected columns: filepath, filename, duration_sec, split
+  # Generate with: python scripts/build_manifest.py data/01_raw/audio/
+
+# ─── 02_intermediate ────────────────────────────────────────
+raw_features:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/raw_features.parquet
+  versioned: true
+
+# ─── 03_primary ─────────────────────────────────────────────
+scaled_features:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/scaled_features.parquet
+  versioned: true
+
+# ─── 04_feature ─────────────────────────────────────────────
+pca_embeddings:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/pca_embeddings.parquet
+  versioned: true
+
+umap_embeddings:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/umap_embeddings.parquet
+  versioned: true
+
+# ─── 06_models ──────────────────────────────────────────────
+kmeans_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/kmeans_model.pkl
+  versioned: true
+
+gmm_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/gmm_model.pkl
+  versioned: true
+
+hdbscan_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/hdbscan_model.pkl
+  versioned: true
+
+scaler_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/scaler.pkl
+  versioned: true
+
+pca_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/pca.pkl
+  versioned: true
+
+umap_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/umap.pkl
+  versioned: true
+
+cluster_labels:
+  type: pandas.ParquetDataset
+  filepath: data/06_models/cluster_labels.parquet
+  versioned: true
+
+# ─── 07_reporting ───────────────────────────────────────────
+evaluation_metrics:
+  type: pandas.CSVDataset
+  filepath: data/07_reporting/evaluation_metrics.csv
+
+cluster_profiles:
+  type: pandas.CSVDataset
+  filepath: data/07_reporting/cluster_profiles.csv
+
+umap_plot:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/07_reporting/umap_clusters.png
+  versioned: true
