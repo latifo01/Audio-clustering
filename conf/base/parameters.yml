@@ -1,0 +1,54 @@
+# ============================================================
+# AUDIO CLUSTERING — PARAMETERS
+# ============================================================
+
+# ─── Feature Engineering ────────────────────────────────────
+feature_engineering:
+  # Path to real audio data (Freesound dataset with JSON sidecars)
+  audio_dir: "data/01_raw/audio"
+  # JSON metadata: tags is a list e.g. ["field-recording","thunder","thunderstorm"]
+  # We use the LAST tag (most specific, ignoring generic labels like 'field-recording')
+  json_tag_field: "tags"          # field name in JSON
+  json_tag_index: -1             # -1 = last tag (most specific)
+  min_duration_sec: 0.5
+  sample_rate: 22050
+  n_mfcc: 20                    # number of MFCC coefficients
+  n_fft: 2048
+  hop_length: 512
+  include_delta_mfcc: true      # first-order derivatives of MFCCs
+  include_delta2_mfcc: true     # second-order derivatives
+
+# ─── Preprocessing ──────────────────────────────────────────
+preprocessing:
+  pca_n_components: 0.95        # keep 95% variance
+  umap_n_components: 2
+  umap_n_neighbors: 15
+  umap_min_dist: 0.1
+  random_state: 42
+
+# ─── Clustering ─────────────────────────────────────────────
+clustering:
+  random_state: 42
+  kmeans:
+    k_range: [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15]
+  gmm:
+    n_components_range: [2, 3, 4, 5, 6, 7, 8]
+    covariance_type: "full"
+  hdbscan:
+    min_cluster_size: 10
+    min_samples: 5
+    metric: "euclidean"
+  agglomerative:
+    n_clusters: 6               # set after KMeans elbow
+    linkage: "ward"
+
+# ─── Evaluation ─────────────────────────────────────────────
+evaluation:
+  stability_n_bootstrap: 50
+  stability_subsample_ratio: 0.8
+  random_state: 42
+
+# ─── MLflow ─────────────────────────────────────────────────
+mlflow:
+  experiment_name: "audio_clustering"
+  run_name: "full_pipeline"
